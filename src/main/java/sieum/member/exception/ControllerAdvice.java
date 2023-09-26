@@ -2,6 +2,7 @@ package sieum.member.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,6 +21,21 @@ public class ControllerAdvice {
 			errorMessage("서버와 연결이 원활하지 않습니다.").build();
 		return new ResponseEntity<>(errorResponse,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+	/**
+	 * @Valid로 인한 유효성 검증 예외 처리
+	 * @param methodArgumentNotValidException
+	 * @return 커스텀 메시지 + 400 error code
+	 */
+	@ExceptionHandler
+	public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+		MethodArgumentNotValidException methodArgumentNotValidException) {
+		ErrorResponse response = ErrorResponse.builder().
+			errorCode(HttpStatus.BAD_REQUEST.value()).
+			errorMessage(methodArgumentNotValidException.getBindingResult().getAllErrors().get(0).getDefaultMessage()).build();
+		return new ResponseEntity<ErrorResponse>(response, HttpStatus.BAD_REQUEST);
+	}
+
 
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> handleException(FollowerException followerException) {
