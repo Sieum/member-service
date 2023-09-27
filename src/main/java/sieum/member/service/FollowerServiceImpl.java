@@ -1,5 +1,6 @@
 package sieum.member.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import sieum.member.dto.response.FollowListResponseDto;
 import sieum.member.entity.Follower;
 import sieum.member.entity.Member;
 import sieum.member.exception.customexception.FollowerException;
@@ -49,15 +51,27 @@ public class FollowerServiceImpl implements FollowerService{
 	}
 
 	@Override
-	public List<Member> getFolloweeList(UUID followerId, Pageable tempPageable) {
-		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), 10);
-		return followerRepository.findFolloweeList(followerId, pageable);
+	public List<FollowListResponseDto> getFolloweeList(UUID followerId, Pageable tempPageable) {
+		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), 1);
+		List<Member> memberList=followerRepository.findFolloweeList(followerId, pageable);
+		List<FollowListResponseDto> followeeList=new ArrayList<>();
+		for(Member member:memberList) {
+			FollowListResponseDto followee=FollowListResponseDto.of(member);
+			followeeList.add(followee);
+		}
+		return followeeList;
 	}
 
 	@Override
-	public List<Member> getFollowerList(UUID followeeId, Pageable tempPageable) {
-		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), 10);
-		return followerRepository.findFollowerList(followeeId, pageable);
+	public List<FollowListResponseDto> getFollowerList(UUID followeeId, Pageable tempPageable) {
+		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), 2);
+		List<Member> memberList=followerRepository.findFollowerList(followeeId, pageable);
+		List<FollowListResponseDto> followerList=new ArrayList<>();
+		for(Member member:memberList) {
+			FollowListResponseDto follower=FollowListResponseDto.of(member);
+			followerList.add(follower);
+		}
+		return followerList;
 	}
 
 	@Override

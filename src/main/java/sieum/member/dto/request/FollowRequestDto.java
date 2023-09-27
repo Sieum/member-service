@@ -1,4 +1,4 @@
-package sieum.member.request;
+package sieum.member.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

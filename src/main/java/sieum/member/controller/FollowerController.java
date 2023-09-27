@@ -4,10 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
 
-import org.apache.coyote.Response;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -24,9 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import sieum.member.MessageOnly;
 import sieum.member.MessageWithData;
+import sieum.member.dto.response.FollowListResponseDto;
 import sieum.member.entity.Member;
 import sieum.member.message.FollowMessage;
-import sieum.member.request.FollowRequestDto;
+import sieum.member.dto.request.FollowRequestDto;
 import sieum.member.service.FollowerService;
 
 @RestController
@@ -67,8 +65,8 @@ public class FollowerController {
 	 * @return
 	 */
 	@GetMapping("/list/followee")
-	public ResponseEntity<MessageWithData<List<Member>>> getFolloweeList(@RequestHeader(name = "uuid") String uuid, @PageableDefault Pageable pageable){
-		MessageWithData <List<Member>> messageWithData = MessageWithData.<List<Member>>builder()
+	public ResponseEntity<MessageWithData<List<FollowListResponseDto>>> getFolloweeList(@RequestHeader(name = "uuid") String uuid, @PageableDefault Pageable pageable){
+		MessageWithData <List<FollowListResponseDto>> messageWithData = MessageWithData.<List<FollowListResponseDto>>builder()
 			.data(followerService.getFolloweeList(UUID.fromString(uuid),pageable))
 			.message(null)
 			.build();
@@ -83,8 +81,8 @@ public class FollowerController {
 	 * @return
 	 */
 	@GetMapping("/list/follower")
-	public ResponseEntity<MessageWithData<List<Member>>> getFollowerList(@RequestHeader(name = "uuid") String uuid, @PageableDefault Pageable pageable){
-		MessageWithData <List<Member>> messageWithData = MessageWithData.<List<Member>>builder()
+	public ResponseEntity<MessageWithData<List<FollowListResponseDto>>> getFollowerList(@RequestHeader(name = "uuid") String uuid, @PageableDefault Pageable pageable){
+		MessageWithData <List<FollowListResponseDto>> messageWithData = MessageWithData.<List<FollowListResponseDto>>builder()
 			.data(followerService.getFollowerList(UUID.fromString(uuid),pageable))
 			.message(null)
 			.build();
