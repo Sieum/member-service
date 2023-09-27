@@ -8,6 +8,8 @@ import javax.validation.constraints.Size;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -22,7 +24,7 @@ import sieum.member.service.FollowerService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/follower")
+@RequestMapping("/follow")
 public class FollowerController {
 
 	private final FollowerService followerService;
@@ -33,14 +35,21 @@ public class FollowerController {
 	 * @param followRequestDto Follow를 받은 대상의 UUID
 	 * @return
 	 */
-	@PostMapping("/follow")
+	@PostMapping("")
 	public ResponseEntity<MessageOnly> follow(@RequestHeader(name = "uuid") String uuid, @RequestBody @Valid FollowRequestDto followRequestDto){
 		followerService.follow(UUID.fromString(uuid), UUID.fromString(followRequestDto.getFollowerId()));
 		return new ResponseEntity<>(new MessageOnly(FollowMessage.SUCCESS_FOLLOW.getMessage()), HttpStatus.OK);
 	}
-	@PostMapping("/unfollow")
-	public ResponseEntity<MessageOnly> unfollow(@RequestHeader(name = "uuid") String uuid, @RequestBody @Valid FollowRequestDto followRequestDto){
-		followerService.follow(UUID.fromString(uuid), UUID.fromString(followRequestDto.getFollowerId()));
+
+	/**
+	 * Unfollow API
+	 * @param uuid Unfollow를 요청한 대상의 UUID
+	 * @param followeeId Unfollow를 받은 대상의 UUID
+	 * @return
+	 */
+	@DeleteMapping("/{followeeId}")
+	public ResponseEntity<MessageOnly> unfollow(@RequestHeader(name = "uuid") String uuid, @PathVariable String followeeId){
+		followerService.unfollow(UUID.fromString(uuid), UUID.fromString(followeeId));
 		return new ResponseEntity<>(new MessageOnly(FollowMessage.SUCCESS_UNFOLLOW.getMessage()), HttpStatus.OK);
 	}
 

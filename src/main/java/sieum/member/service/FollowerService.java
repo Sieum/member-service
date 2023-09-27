@@ -6,5 +6,7 @@ import sieum.member.entity.Member;
 
 public interface FollowerService {
 	public void follow(UUID followerId, UUID followeeId);
+
+	public void unfollow(UUID followerId, UUID followeeId);
 	public boolean isFollower(UUID followerId,UUID followeeId);
 }
