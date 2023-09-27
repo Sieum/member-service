@@ -1,39 +1,58 @@
 package sieum.member.entity;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
+@EntityListeners(AuditingEntityListener.class)
+@Entity
+@Table(name = "follower",  uniqueConstraints = {
+	@UniqueConstraint(columnNames = {"follower_followee_id", "follower_follow_id"})
+})
 public class Follower {
 
-	@EmbeddedId
-	private FollowerId followerId;
+	@Id
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	@Column( name="follower_id",columnDefinition = "BINARY(16)")
+	private UUID id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@MapsId("followeeId")
-	@JoinColumn(name = "member_id", nullable = false)
+	@JoinColumn(name = "follower_followee_id", referencedColumnName = "member_id", nullable = false)
 	private Member followee;
 
-
 	@ManyToOne(fetch = FetchType.LAZY)
-	@MapsId("followerId")
-	@JoinColumn(name = "member_id", nullable = false)
+	@JoinColumn(name = "follower_follow_id", referencedColumnName = "member_id", nullable = false)
 	private Member follower;
 
 	@CreatedDate
-	@Column(name="follow_created_date",nullable = false)
+	@Column(name="follow_created_date", nullable = false)
 	private LocalDateTime createdDate;
+
+	@Builder
+	private Follower(Member followee, Member follower) {
+		this.followee = followee;
+		this.follower = follower;
+	}
 
 }

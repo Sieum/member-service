@@ -38,7 +38,7 @@ public class ControllerAdvice {
 
 
 	@ExceptionHandler
-	public ResponseEntity<ErrorResponse> handleException(FollowerException followerException) {
+	public ResponseEntity<ErrorResponse> handleFollowerException(FollowerException followerException) {
 		log.debug("follwer error message : {}",followerException.getMessage());
 		ErrorResponse errorResponse= ErrorResponse.builder().
 			errorCode(followerException.getHttpStatus().value()).

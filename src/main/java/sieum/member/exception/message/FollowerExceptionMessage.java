@@ -6,7 +6,8 @@ import lombok.Getter;
 
 @Getter
 public enum FollowerExceptionMessage {
-	ALREADY_FOLLOW("이미 팔로우하셨습니다.", HttpStatus.BAD_REQUEST);
+	ALREADY_FOLLOW("이미 팔로우하셨습니다.", HttpStatus.BAD_REQUEST),
+	NOT_FOUND_MEMBER("존재하지 않는 유저입니다.", HttpStatus.NOT_FOUND);
 
 	private final String errorMessage;
 	private final HttpStatus errorCode;
