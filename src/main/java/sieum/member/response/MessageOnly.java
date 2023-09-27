@@ -1,4 +1,4 @@
-package sieum.member;
+package sieum.member.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
