@@ -1,14 +1,19 @@
 package sieum.member.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import org.apache.coyote.Response;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import sieum.member.MessageOnly;
+import sieum.member.MessageWithData;
+import sieum.member.entity.Member;
 import sieum.member.message.FollowMessage;
 import sieum.member.request.FollowRequestDto;
 import sieum.member.service.FollowerService;
@@ -51,6 +58,22 @@ public class FollowerController {
 	public ResponseEntity<MessageOnly> unfollow(@RequestHeader(name = "uuid") String uuid, @PathVariable String followeeId){
 		followerService.unfollow(UUID.fromString(uuid), UUID.fromString(followeeId));
 		return new ResponseEntity<>(new MessageOnly(FollowMessage.SUCCESS_UNFOLLOW.getMessage()), HttpStatus.OK);
+	}
+
+	/**
+	 * 내가 팔로우하고 있는 멤버들의 목록 반환
+	 * @param uuid  팔로우하고 있는 멤버를 보고자 하는 대상의 UUID
+	 * @param pageable page번호
+	 * @return
+	 */
+	@GetMapping("/list/followee")
+	public ResponseEntity<MessageWithData<List<Member>>> getFolloweeList(@RequestHeader(name = "uuid") String uuid, @PageableDefault Pageable pageable){
+		MessageWithData <List<Member>> messageWithData = MessageWithData.<List<Member>>builder()
+			.data(followerService.getFolloweeList(UUID.fromString(uuid),pageable))
+			.message(null)
+			.build();
+
+		return new ResponseEntity<>(messageWithData, HttpStatus.OK);
 	}
 
 }
