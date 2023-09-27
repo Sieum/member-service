@@ -19,10 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import sieum.member.MessageOnly;
-import sieum.member.MessageWithData;
+import sieum.member.dto.MessageOnly;
+import sieum.member.dto.MessageWithData;
 import sieum.member.dto.response.FollowListResponseDto;
-import sieum.member.entity.Member;
 import sieum.member.message.FollowMessage;
 import sieum.member.dto.request.FollowRequestDto;
 import sieum.member.service.FollowerService;
