@@ -33,4 +33,16 @@ public class FollowerRepositoryImpl implements FollowerRepositoryCustom{
 			.limit(pageable.getPageSize())
 			.fetch();
 	}
+
+	@Override
+	public List<Member> findFollowerList(UUID followeeId, Pageable pageable) {
+		QMember member= QMember.member;
+		QFollower follower=QFollower.follower1;
+		return queryFactory.select(member)
+			.from(member).join(follower).on(member.id.eq(follower.follower))
+			.where(follower.followee.eq(followeeId))
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+	}
 }

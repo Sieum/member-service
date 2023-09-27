@@ -55,6 +55,12 @@ public class FollowerServiceImpl implements FollowerService{
 	}
 
 	@Override
+	public List<Member> getFollowerList(UUID followeeId, Pageable tempPageable) {
+		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), 10);
+		return followerRepository.findFollowerList(followeeId, pageable);
+	}
+
+	@Override
 	public boolean isFollower(UUID follower, UUID followee) {
 		if(followerRepository.findByFollowerAndFollowee(follower, followee).orElse(null)!=null){
 			return true;

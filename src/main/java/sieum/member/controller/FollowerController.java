@@ -61,7 +61,7 @@ public class FollowerController {
 	}
 
 	/**
-	 * 내가 팔로우하고 있는 멤버들의 목록 반환
+	 * 내가 팔로우하고 있는 멤버들의 목록 조회 기능
 	 * @param uuid  팔로우하고 있는 멤버를 보고자 하는 대상의 UUID
 	 * @param pageable page번호
 	 * @return
@@ -70,6 +70,22 @@ public class FollowerController {
 	public ResponseEntity<MessageWithData<List<Member>>> getFolloweeList(@RequestHeader(name = "uuid") String uuid, @PageableDefault Pageable pageable){
 		MessageWithData <List<Member>> messageWithData = MessageWithData.<List<Member>>builder()
 			.data(followerService.getFolloweeList(UUID.fromString(uuid),pageable))
+			.message(null)
+			.build();
+
+		return new ResponseEntity<>(messageWithData, HttpStatus.OK);
+	}
+
+	/**
+	 * 나를 팔로워하고 있는 목록 조회 기능
+	 * @param uuid 자신을 팔로우하고 있는 멤버를 보고자 하는 대상의 UUID
+	 * @param pageable page번호
+	 * @return
+	 */
+	@GetMapping("/list/follower")
+	public ResponseEntity<MessageWithData<List<Member>>> getFollowerList(@RequestHeader(name = "uuid") String uuid, @PageableDefault Pageable pageable){
+		MessageWithData <List<Member>> messageWithData = MessageWithData.<List<Member>>builder()
+			.data(followerService.getFollowerList(UUID.fromString(uuid),pageable))
 			.message(null)
 			.build();
 
