@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.16'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'sieum.member'
@@ -12,6 +13,7 @@ java {
 }
 
 configurations {
+    querydsl.extendsFrom compileClasspath
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -38,6 +40,10 @@ dependencies {
     runtimeOnly 'com.h2database:h2';
     //JSON
     implementation 'io.hypersistence:hypersistence-utils-hibernate-5:3.5.2'
+    implementation 'com.querydsl:querydsl-jpa'
+    implementation 'com.querydsl:querydsl-apt'
+
+
 }
 
 dependencyManagement {
@@ -49,3 +55,25 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', querydslDir]
+        }
+    }
+}
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+
