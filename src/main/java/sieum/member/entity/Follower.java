@@ -37,20 +37,18 @@ public class Follower {
 	@Column( name="follower_id",columnDefinition = "BINARY(16)")
 	private UUID id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "follower_followee_id", referencedColumnName = "member_id", nullable = false)
-	private Member followee;
+	@Column(name="follower_followee_id",columnDefinition = "BINARY(16)", nullable=false)
+	private UUID followee;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "follower_follow_id", referencedColumnName = "member_id", nullable = false)
-	private Member follower;
+	@Column(name="follower_follow_id",columnDefinition = "BINARY(16)", nullable=false)
+	private UUID follower;
 
 	@CreatedDate
 	@Column(name="follow_created_date", nullable = false)
 	private LocalDateTime createdDate;
 
 	@Builder
-	private Follower(Member followee, Member follower) {
+	private Follower(UUID followee, UUID follower) {
 		this.followee = followee;
 		this.follower = follower;
 	}

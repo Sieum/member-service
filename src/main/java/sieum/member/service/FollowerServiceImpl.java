@@ -23,21 +23,20 @@ public class FollowerServiceImpl implements FollowerService{
 	@Transactional
 	public void follow(UUID followerId, UUID followeeId) {
 		Member followee=memberRepository.findMemberByIdAndIsDeletedFalse(followeeId).orElseThrow(()->new FollowerException(FollowerExceptionMessage.NOT_FOUND_MEMBER));
-		Member follower=memberRepository.findMemberByIdAndIsDeletedFalse(followerId).orElse(null);
-		if(isFollower(follower, followee)){
+		if(isFollower(followerId, followeeId)){
 			throw new FollowerException(FollowerExceptionMessage.ALREADY_FOLLOW);
 		}
-
 		Follower follow = Follower.builder()
-						.follower(follower)
-						.followee(followee)
+						.follower(followerId)
+						.followee(followeeId)
 						.build();
 		followerRepository.save(follow);
 	}
 
+
 	@Override
-	public boolean isFollower(Member follower, Member followee) {
-		if(followerRepository.countByFollowerAndFollowee(follower, followee)>0){
+	public boolean isFollower(UUID follower, UUID followee) {
+		if(followerRepository.findByFollowerAndFollowee(follower, followee).orElse(null)!=null){
 			return true;
 		}
 		return false;

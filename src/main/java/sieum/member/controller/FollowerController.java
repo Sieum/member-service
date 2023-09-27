@@ -38,5 +38,10 @@ public class FollowerController {
 		followerService.follow(UUID.fromString(uuid), UUID.fromString(followRequestDto.getFollowerId()));
 		return new ResponseEntity<>(new MessageOnly(FollowMessage.SUCCESS_FOLLOW.getMessage()), HttpStatus.OK);
 	}
+	@PostMapping("/unfollow")
+	public ResponseEntity<MessageOnly> unfollow(@RequestHeader(name = "uuid") String uuid, @RequestBody @Valid FollowRequestDto followRequestDto){
+		followerService.follow(UUID.fromString(uuid), UUID.fromString(followRequestDto.getFollowerId()));
+		return new ResponseEntity<>(new MessageOnly(FollowMessage.SUCCESS_UNFOLLOW.getMessage()), HttpStatus.OK);
+	}
 
 }
