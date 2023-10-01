@@ -5,13 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.UpdateTimestamp;
-import sieum.member.dto.MemberProfileUpdateRequestDto;
+import org.springframework.data.annotation.LastModifiedDate;
+import sieum.member.dto.request.MemberProfileUpdateRequestDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -24,9 +27,10 @@ import java.util.UUID;
 @TypeDef(name = "json", typeClass = JsonType.class)
 public class Member {
     @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "member_id", columnDefinition = "BINARY(16)")
-    @Builder.Default
-    private UUID id = UUID.randomUUID();
+    private UUID id;
 
     @Column(name = "member_spotify_user_id", nullable = false)
     private String spotifyUserId;
@@ -60,13 +64,16 @@ public class Member {
     private LocalDateTime createdDate;
 
     @Column(name = "member_modified_date")
-    @UpdateTimestamp
+    @LastModifiedDate
     private LocalDateTime modifiedDate;
 
     @Column(name = "member_is_deleted", columnDefinition = "boolean default false")
     private Boolean isDeleted = false;
 
-    public Member updateMember(MemberProfileUpdateRequestDto memberProfileUpdateRequestDto){
+    @OneToMany(mappedBy = "member")
+    private List<Music> myLikedMusicList = new ArrayList<>();
+
+    public void updateMember(MemberProfileUpdateRequestDto memberProfileUpdateRequestDto){
         if(memberProfileUpdateRequestDto.getNickname() != null)
             this.nickname = memberProfileUpdateRequestDto.getNickname();
 
@@ -87,8 +94,10 @@ public class Member {
 
         if(memberProfileUpdateRequestDto.getHashtags() != null)
             this.hashtags = memberProfileUpdateRequestDto.getHashtags();
+    }
 
-        return this;
+    public void deleted() {
+        this.isDeleted = true;
     }
 
 }

@@ -6,9 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sieum.member.dto.MemberProfileResponseDto;
-import sieum.member.dto.MemberProfileUpdateRequestDto;
-import sieum.member.response.MessageWithData;
+import sieum.member.dto.response.MemberProfileResponseDto;
+import sieum.member.dto.request.MemberProfileUpdateRequestDto;
+import sieum.member.dto.MessageOnly;
+import sieum.member.dto.MessageWithData;
 import sieum.member.service.MemberService;
 
 import java.util.Map;
@@ -22,10 +23,16 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping
-    public ResponseEntity<MessageWithData<MemberProfileResponseDto>> getMemberProfile(@RequestHeader Map<String, String> headers) throws JsonProcessingException {
+    public ResponseEntity<MessageWithData<MemberProfileResponseDto>> getMyProfile(@RequestHeader Map<String, String> headers) throws JsonProcessingException {
         String uuid = headers.get("uuid");
         MemberProfileResponseDto data = memberService.getMemberProfile(UUID.fromString(uuid));
         return new ResponseEntity<>(new MessageWithData<>("test", data), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/{uuid}")
+    public ResponseEntity<MessageWithData<MemberProfileResponseDto>> getOtherProfile(@PathVariable String uuid){
+        MemberProfileResponseDto data = memberService.getMemberProfile(UUID.fromString(uuid));
+        return new ResponseEntity<>(new MessageWithData<>(data.getNickname()+"님의 프로필을 조회했습니다.", data), HttpStatus.ACCEPTED);
     }
 
     @PutMapping
@@ -35,4 +42,12 @@ public class MemberController {
         MemberProfileResponseDto data = memberService.updateMemberProfile(UUID.fromString(uuid), memberProfileUpdateRequestDto);
         return new ResponseEntity<>(new MessageWithData<>("프로필을 변경했습니다.", data), HttpStatus.ACCEPTED);
     }
+
+    @DeleteMapping
+    public ResponseEntity<MessageOnly> deleteMember(@RequestHeader Map<String, String> headers){
+        String uuid = headers.get("uuid");
+        memberService.deleteUser(UUID.fromString(uuid));
+        return new ResponseEntity<>(new MessageOnly("탈퇴하였습니다."), HttpStatus.ACCEPTED);
+    }
+
 }
