@@ -6,11 +6,13 @@ import java.util.UUID;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import sieum.member.dto.response.FollowListResponseDto;
+import sieum.member.dto.response.FollowResponseDto;
 import sieum.member.entity.Follower;
 import sieum.member.entity.Member;
 import sieum.member.exception.customexception.FollowerException;
@@ -51,27 +53,35 @@ public class FollowerServiceImpl implements FollowerService{
 	}
 
 	@Override
-	public List<FollowListResponseDto> getFolloweeList(UUID followerId, Pageable tempPageable) {
-		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), 1);
-		List<Member> memberList=followerRepository.findFolloweeList(followerId, pageable);
-		List<FollowListResponseDto> followeeList=new ArrayList<>();
+	public FollowListResponseDto getFolloweeList(UUID followerId, Pageable tempPageable) {
+		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), 10);
+		Slice<Member> memberList=followerRepository.findFolloweeList(followerId, pageable);
+		List<FollowResponseDto> followeeList = new ArrayList<>();
 		for(Member member:memberList) {
-			FollowListResponseDto followee=FollowListResponseDto.of(member);
+			FollowResponseDto followee=FollowResponseDto.of(member);
 			followeeList.add(followee);
 		}
-		return followeeList;
+		FollowListResponseDto followListResponseDto=FollowListResponseDto.builder()
+			.followResponseDtoList(followeeList)
+			.isLast(memberList.isLast())
+			.build();
+		return followListResponseDto;
 	}
 
 	@Override
-	public List<FollowListResponseDto> getFollowerList(UUID followeeId, Pageable tempPageable) {
-		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), 2);
-		List<Member> memberList=followerRepository.findFollowerList(followeeId, pageable);
-		List<FollowListResponseDto> followerList=new ArrayList<>();
+	public FollowListResponseDto getFollowerList(UUID followeeId, Pageable tempPageable) {
+		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), 10);
+		Slice<Member> memberList=followerRepository.findFollowerList(followeeId, pageable);
+		List<FollowResponseDto> followerList=new ArrayList<>();
 		for(Member member:memberList) {
-			FollowListResponseDto follower=FollowListResponseDto.of(member);
+			FollowResponseDto follower=FollowResponseDto.of(member);
 			followerList.add(follower);
 		}
-		return followerList;
+		FollowListResponseDto followListResponseDto=FollowListResponseDto.builder()
+			.followResponseDtoList(followerList)
+			.isLast(memberList.isLast())
+			.build();
+		return followListResponseDto;
 	}
 
 	@Override

@@ -13,8 +13,8 @@ public interface FollowerService {
 
 	public void unfollow(UUID followerId, UUID followeeId);
 
-	public List<FollowListResponseDto> getFolloweeList(UUID followerId, Pageable pageable);
+	public FollowListResponseDto getFolloweeList(UUID followerId, Pageable pageable);
 
-	public List<FollowListResponseDto> getFollowerList(UUID followeeId, Pageable pageable);
+	public FollowListResponseDto getFollowerList(UUID followeeId, Pageable pageable);
 	public boolean isFollower(UUID followerId,UUID followeeId);
 }

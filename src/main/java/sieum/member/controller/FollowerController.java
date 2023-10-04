@@ -64,8 +64,8 @@ public class FollowerController {
 	 * @return
 	 */
 	@GetMapping("/list/followee")
-	public ResponseEntity<MessageWithData<List<FollowListResponseDto>>> getFolloweeList(@RequestHeader(name = "uuid") String uuid, @PageableDefault Pageable pageable){
-		MessageWithData <List<FollowListResponseDto>> messageWithData = MessageWithData.<List<FollowListResponseDto>>builder()
+	public ResponseEntity<MessageWithData<FollowListResponseDto>> getFolloweeList(@RequestHeader(name = "uuid") String uuid, @PageableDefault Pageable pageable){
+		MessageWithData <FollowListResponseDto> messageWithData = MessageWithData.<FollowListResponseDto>builder()
 			.data(followerService.getFolloweeList(UUID.fromString(uuid),pageable))
 			.message(null)
 			.build();
@@ -80,13 +80,16 @@ public class FollowerController {
 	 * @return
 	 */
 	@GetMapping("/list/follower")
-	public ResponseEntity<MessageWithData<List<FollowListResponseDto>>> getFollowerList(@RequestHeader(name = "uuid") String uuid, @PageableDefault Pageable pageable){
-		MessageWithData <List<FollowListResponseDto>> messageWithData = MessageWithData.<List<FollowListResponseDto>>builder()
+	public ResponseEntity<MessageWithData<FollowListResponseDto>> getFollowerList(@RequestHeader(name = "uuid") String uuid, @PageableDefault Pageable pageable){
+		MessageWithData <FollowListResponseDto> messageWithData = MessageWithData.<FollowListResponseDto>builder()
 			.data(followerService.getFollowerList(UUID.fromString(uuid),pageable))
 			.message(null)
 			.build();
 
 		return new ResponseEntity<>(messageWithData, HttpStatus.OK);
 	}
+
+
+
 
 }
