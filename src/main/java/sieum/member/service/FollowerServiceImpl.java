@@ -23,6 +23,7 @@ import sieum.member.repository.MemberRepository;
 @RequiredArgsConstructor
 @Service
 public class FollowerServiceImpl implements FollowerService{
+	private final int FOLLOW_NUMBER_PER_PAGE=10;
 	private final FollowerRepository followerRepository;
 	private final MemberRepository memberRepository;
 	@Override
@@ -54,7 +55,7 @@ public class FollowerServiceImpl implements FollowerService{
 
 	@Override
 	public FollowListResponseDto getFolloweeList(UUID followerId, Pageable tempPageable) {
-		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), 10);
+		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), FOLLOW_NUMBER_PER_PAGE);
 		Slice<Member> memberList=followerRepository.findFolloweeList(followerId, pageable);
 		List<FollowResponseDto> followeeList = new ArrayList<>();
 		for(Member member:memberList) {
@@ -70,7 +71,7 @@ public class FollowerServiceImpl implements FollowerService{
 
 	@Override
 	public FollowListResponseDto getFollowerList(UUID followeeId, Pageable tempPageable) {
-		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), 10);
+		Pageable pageable= PageRequest.of(tempPageable.getPageNumber(), FOLLOW_NUMBER_PER_PAGE);
 		Slice<Member> memberList=followerRepository.findFollowerList(followeeId, pageable);
 		List<FollowResponseDto> followerList=new ArrayList<>();
 		for(Member member:memberList) {
