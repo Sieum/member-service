@@ -29,7 +29,7 @@ public class FollowerServiceImpl implements FollowerService{
 	@Override
 	@Transactional
 	public void follow(UUID followerId, UUID followeeId) {
-		memberRepository.findMemberByIdAndIsDeletedFalse(followeeId).orElseThrow(()->
+		memberRepository.findByIdAndIsDeletedFalse(followeeId).orElseThrow(()->
 			new FollowerException(FollowerExceptionMessage.NOT_FOUND_MEMBER));
 		if(isFollower(followerId, followeeId)){
 			throw new FollowerException(FollowerExceptionMessage.ALREADY_FOLLOW);
@@ -43,7 +43,7 @@ public class FollowerServiceImpl implements FollowerService{
 
 	@Override
 	public void unfollow(UUID followerId, UUID followeeId) {
-		memberRepository.findMemberByIdAndIsDeletedFalse(followeeId).orElseThrow(()->
+		memberRepository.findByIdAndIsDeletedFalse(followeeId).orElseThrow(()->
 			new FollowerException(FollowerExceptionMessage.NOT_FOUND_MEMBER));
 		Follower follower=followerRepository.findByFollowerAndFollowee(followerId, followeeId).orElseThrow(()->
 			new FollowerException(FollowerExceptionMessage.NOT_FOUND_FOLLOW));

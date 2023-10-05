@@ -29,7 +29,7 @@ public class MemberController {
         return new ResponseEntity<>(new MessageWithData<>("test", data), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/{uuid}")
+    @GetMapping("/{spotifyId}")
     public ResponseEntity<MessageWithData<MemberProfileResponseDto>> getOtherProfile(@PathVariable String spotifyId){
         MemberProfileResponseDto data = memberService.getOtherProfile(spotifyId);
         return new ResponseEntity<>(new MessageWithData<>(data.getNickname()+"님의 프로필을 조회했습니다.", data), HttpStatus.ACCEPTED);
