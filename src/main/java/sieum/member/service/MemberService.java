@@ -6,7 +6,8 @@ import sieum.member.dto.request.MemberProfileUpdateRequestDto;
 import java.util.UUID;
 
 public interface MemberService {
-    public MemberProfileResponseDto getMemberProfile(UUID uuid);
+    public MemberProfileResponseDto getMyProfile(UUID uuid);
+    public MemberProfileResponseDto getOtherProfile(String spotifyId);
 
     public MemberProfileResponseDto updateMemberProfile(UUID uuid, MemberProfileUpdateRequestDto memberProfileUpdateRequestDto);
 

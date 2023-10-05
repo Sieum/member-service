@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface MemberRepository extends JpaRepository<Member, UUID> {
     Optional<Member> findByIdAndIsDeletedFalse(UUID uuid);
 
+    Optional<Member> findBySpotifyUserIdAndIsDeletedFalse(String spotifyId);
+
 }
