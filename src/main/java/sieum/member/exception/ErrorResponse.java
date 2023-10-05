@@ -1,7 +1,9 @@
 package sieum.member.exception;
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class ErrorResponse {
 	private final String errorMessage;
 	private final int errorCode;

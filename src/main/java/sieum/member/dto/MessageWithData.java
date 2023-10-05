@@ -1,4 +1,4 @@
-package sieum.member;
+package sieum.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class MessageWithData {
+public class MessageWithData<T> {
     private String message;
-    private Object data;
+    private T data;
 }
