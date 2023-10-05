@@ -18,8 +18,14 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
 
     @Override
-    public MemberProfileResponseDto getMemberProfile(UUID userId) {
+    public MemberProfileResponseDto getMyProfile(UUID userId) {
         Member member = findMemberById(userId);
+        return new MemberProfileResponseDto().toMemberProfileResponseDto(member);
+    }
+
+    @Override
+    public MemberProfileResponseDto getOtherProfile(String spotifyId) {
+        Member member = findMemberBySpotifyId(spotifyId);
         return new MemberProfileResponseDto().toMemberProfileResponseDto(member);
     }
 
@@ -40,6 +46,11 @@ public class MemberServiceImpl implements MemberService{
 
     public Member findMemberById(UUID userId){
         return memberRepository.findByIdAndIsDeletedFalse(userId)
+                .orElseThrow(() -> new RuntimeException("해당하는 유저를 찾을 수 없습니다."));
+    }
+
+    public Member findMemberBySpotifyId(String spotifyId){
+        return memberRepository.findBySpotifyUserIdAndIsDeletedFalse(spotifyId)
                 .orElseThrow(() -> new RuntimeException("해당하는 유저를 찾을 수 없습니다."));
     }
 }

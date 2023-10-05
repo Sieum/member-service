@@ -25,13 +25,13 @@ public class MemberController {
     @GetMapping
     public ResponseEntity<MessageWithData<MemberProfileResponseDto>> getMyProfile(@RequestHeader Map<String, String> headers) throws JsonProcessingException {
         String uuid = headers.get("uuid");
-        MemberProfileResponseDto data = memberService.getMemberProfile(UUID.fromString(uuid));
+        MemberProfileResponseDto data = memberService.getMyProfile(UUID.fromString(uuid));
         return new ResponseEntity<>(new MessageWithData<>("test", data), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<MessageWithData<MemberProfileResponseDto>> getOtherProfile(@PathVariable String uuid){
-        MemberProfileResponseDto data = memberService.getMemberProfile(UUID.fromString(uuid));
+    public ResponseEntity<MessageWithData<MemberProfileResponseDto>> getOtherProfile(@PathVariable String spotifyId){
+        MemberProfileResponseDto data = memberService.getOtherProfile(spotifyId);
         return new ResponseEntity<>(new MessageWithData<>(data.getNickname()+"님의 프로필을 조회했습니다.", data), HttpStatus.ACCEPTED);
     }
 
